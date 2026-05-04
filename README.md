@@ -31,7 +31,8 @@ CREATE TABLE TableName (
 Access 常見資料型別：
 
 - `AUTOINCREMENT`：自動編號（主鍵常用）
-- `TEXT(n)`：文字，n 為最大字元數
+- `TEXT(n)`：文字，n 為最大字元數（Access 中對應 SQL 的 `VARCHAR(n)`）
+- `VARCHAR(n)`：SQL 標準文字欄位，Access 通常使用 `TEXT(n)`
 - `DATE`：日期時間
 - `CURRENCY`：貨幣
 - `NUMBER`：數字
@@ -80,28 +81,74 @@ VALUES ('李小華', '新北市板橋區文化路', '新北', #2024-04-20#, 850.
 
 ## 3. 查詢資料（SELECT）
 
-語法：
+SELECT 是 SQL 中最常用的查詢指令，結構如下：
 
 ```sql
-SELECT Column1, Column2, ...
-FROM TableName
+SELECT [DISTINCT] Column1 [AS Alias1], Column2 [AS Alias2], ...
+FROM TableName [AS t]
+[JOIN OtherTable ON condition]
 [WHERE condition]
-[GROUP BY Column]
-[ORDER BY Column [ASC|DESC]];
+[GROUP BY Column1, Column2, ...]
+[HAVING aggregate_condition]
+[ORDER BY Column1 [ASC|DESC], Column2 [ASC|DESC]];
 ```
 
-簡單查詢：
+說明：
+
+- `SELECT`：指定要查詢的欄位。
+- `*`：表示查詢所有欄位。
+- `AS`：欄位別名，可用於欄位或運算結果。
+- `FROM`：指定資料表來源。
+- `JOIN`：當有多個資料表時，使用 JOIN 連接條件。
+- `WHERE`：篩選條件。
+- `GROUP BY`：分組條件，常與聚合函數一起使用。
+- `HAVING`：分組後的條件過濾。
+- `ORDER BY`：排序結果，預設為 ASC（由小到大）。
+
+範例：簡單查詢
 
 ```sql
 SELECT CustomerID, CustomerName, Addr, City, JoinDate, Amount
 FROM Customers;
 ```
 
-指定欄位查詢：
+查詢所有欄位
 
 ```sql
-SELECT CustomerName, City, Amount
+SELECT *
 FROM Customers;
+```
+
+注意：Access 中 `SELECT * AS NewName` 不是合法語法，若要改名請為單一欄位或運算結果使用 `AS`。
+
+欄位別名
+
+```sql
+SELECT CustomerName AS 客戶名稱, City AS 城市
+FROM Customers;
+```
+
+運算與別名
+
+```sql
+SELECT CustomerName, Amount, Amount * 1.1 AS NewAmount
+FROM Customers;
+```
+
+多資料表查詢（JOIN 範例）
+
+```sql
+SELECT c.CustomerName, o.OrderID, o.OrderDate
+FROM Customers AS c
+INNER JOIN Orders AS o
+ON c.CustomerID = o.CustomerID;
+```
+
+如果在 Access 中直接寫多個資料表而不加 JOIN 條件，會得到笛卡兒乘積：
+
+```sql
+SELECT *
+FROM Customers, Orders;
 ```
 
 條件查詢：
@@ -144,7 +191,7 @@ WHERE City = '新北'
 
 ## 5. 模糊查詢（LIKE）
 
-Access 使用 `*` 作為萬用字元，`?` 代表單一字元。
+Access 使用 `*` 作為多字元萬用字元，`?` 代表單一字元。
 
 語法：
 
@@ -154,7 +201,7 @@ FROM TableName
 WHERE Field LIKE 'pattern';
 ```
 
-地址模糊查詢範例：
+範例：
 
 ```sql
 SELECT *
@@ -168,6 +215,26 @@ WHERE Addr LIKE '*板橋*';
 SELECT CustomerName, Addr
 FROM Customers
 WHERE Addr LIKE '*中正區*';
+```
+
+`LIKE` 範例：
+
+- `'*馬公*'`：包含 `馬公` 的所有文字
+- `'?.台北'`：第一個字元任一、第二個字元為 `.`，例如 `A.台北`
+
+Access 與標準 SQL 的通配符比較：
+
+- Access：`*`、`?`
+- SQL 標準：`%`、`_`
+
+> 在 Microsoft Access 中，不要使用 `%` 取代 `*`，也不要用 `_` 取代 `?`。
+
+如果你要查詢像 `'*地區明馬公*'`，Access 語法如下：
+
+```sql
+SELECT *
+FROM Customers
+WHERE Addr LIKE '*地區明馬公*';
 ```
 
 ---
@@ -279,6 +346,8 @@ DROP COLUMN Email;
 
 ## 10. 排序（ORDER BY）
 
+`ORDER BY` 用於指定查詢結果的排序次序。
+
 語法：
 
 ```sql
@@ -286,6 +355,11 @@ SELECT Column1, Column2
 FROM TableName
 ORDER BY Column1 [ASC|DESC], Column2 [ASC|DESC];
 ```
+
+說明：
+
+- `ASC`：遞增排序（由小到大、由舊到新），是預設值。
+- `DESC`：遞減排序（由大到小、由新到舊）。
 
 範例：
 
@@ -296,12 +370,26 @@ ORDER BY Amount DESC;
 
 SELECT CustomerName, JoinDate
 FROM Customers
-ORDER BY JoinDate DESC;
+ORDER BY JoinDate ASC;
+```
+
+多欄位排序：
+
+```sql
+SELECT CustomerName, City, Amount
+FROM Customers
+ORDER BY City ASC, Amount DESC;
 ```
 
 ---
 
-## 11. 聚合查詢：COUNT(*)、AVG
+## 11. 聚合查詢：COUNT(*)、AVG、SUM
+
+聚合函數用於計算數值統計或筆數。
+
+- `COUNT(*)`：計算符合條件的資料筆數。
+- `AVG(expression)`：計算平均值。
+- `SUM(expression)`：計算總和。
 
 計算總筆數：
 
@@ -310,18 +398,39 @@ SELECT COUNT(*) AS TotalCustomers
 FROM Customers;
 ```
 
-計算平均值：
+計算平均金額：
 
 ```sql
 SELECT AVG(Amount) AS AvgAmount
 FROM Customers;
 ```
 
-依城市分組計算筆數與平均金額：
+計算總金額：
 
 ```sql
-SELECT City, COUNT(*) AS CustomerCount, AVG(Amount) AS AvgAmount
+SELECT SUM(Amount) AS TotalAmount
+FROM Customers;
+```
+
+依城市分組計算筆數、平均金額與總金額：
+
+```sql
+SELECT City,
+       COUNT(*) AS CustomerCount,
+       AVG(Amount) AS AvgAmount,
+       SUM(Amount) AS TotalAmount
 FROM Customers
+GROUP BY City;
+```
+
+搭配 `WHERE` 篩選後再分組：
+
+```sql
+SELECT City,
+       COUNT(*) AS CustomerCount,
+       SUM(Amount) AS TotalAmount
+FROM Customers
+WHERE JoinDate >= #2024-05-01#
 GROUP BY City;
 ```
 
