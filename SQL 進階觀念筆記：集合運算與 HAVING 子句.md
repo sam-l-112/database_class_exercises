@@ -3,7 +3,7 @@
 # The user wants explanations for HAVING, AVG, SUM, COUNT(*), UNION, INTERSECT, DIFFERENCE (EXCEPT), and DISTINCT 
 # with detailed descriptions and business examples tailored to the DVD/Transaction/Customer ER diagram seen in the photos.
 # It needs to be written in professional Traditional Chinese for a HackMD-compatible document.
-
+```
 content = """# 📊 SQL 核心語法與集合運算全攻略 (HackMD 筆記)
 
 本篇筆記針對 DVD 租售管理系統之實體關係圖（ER Diagram：Customer, Transaction, Include, DVD, Publisher）進行延伸探討。內容涵蓋資料庫進階查詢的核心觀念，包含**分組過濾（HAVING）**、**聚合函數（Aggregation Functions）**與**集合運算子（Set Operators）**的詳細功能說明、語法架構及實戰商務範例。
@@ -21,11 +21,11 @@ content = """# 📊 SQL 核心語法與集合運算全攻略 (HackMD 筆記)
 ### 2. 實戰範例
 **情境**：找出 2026 年 5 月份，總成交金額大於 10,000 元的顧客編號、姓名與成交金額。
 
-```
+
 
 ```text
 Markdown file generated successfully.
-
+```
 ```sql
 SELECT 
     C.CID AS 顧客編號, 
@@ -189,8 +189,6 @@ f.write(content)
 
 print("Markdown file generated successfully.")
 
-```
-您的 HackMD Markdown 格式筆記檔案已經製作完成了！
 
 [file-tag: code-generated-file-0-1780280916565521353]
 
