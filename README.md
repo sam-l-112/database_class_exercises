@@ -3,6 +3,8 @@
 
 [EX](./ex.md)
 
+[SQL 進階觀念筆記：集合運算與 HAVING 子句](./SQL 進階觀念筆記：集合運算與 HAVING 子句.md)
+
 本文件整理 Microsoft Access 常見 SQL 語法範例，包含：
 
 - 資料表建立（CREATE TABLE）
