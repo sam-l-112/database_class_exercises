@@ -1,6 +1,8 @@
 # Microsoft Access exerciser 
 # 資料庫練習說明
 
+EX(./ex.md)
+
 本文件整理 Microsoft Access 常見 SQL 語法範例，包含：
 
 - 資料表建立（CREATE TABLE）
