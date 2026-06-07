@@ -1,6 +1,6 @@
-# 
+# EX HAVING
 
-- ex
+## ex
 
 ```sql
 SELECT 
