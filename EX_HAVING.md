@@ -17,6 +17,8 @@ HAVING SUM(I.數量 * D.PRICE) > 10000
 ORDER BY C.CID;
 ```
 
+## INNER JOIN 差異
+
 ```SQL
 SELECT 
     C.CID AS 顧客編號, 
