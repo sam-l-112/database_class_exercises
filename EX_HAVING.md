@@ -1,6 +1,8 @@
 # EX HAVING
 
-## ex
+[介紹聚合函數 HAVING](./SQL_進階觀念筆記:集合運算與_HAVING_子句.md)
+
+## EX 可課堂使用 ACCESS 一般都可以使用 DATABASE
 
 ```sql
 SELECT 
@@ -18,7 +20,7 @@ HAVING SUM(I.數量 * D.PRICE) > 10000
 ORDER BY C.CID;
 ```
 
-## INNER JOIN 差異
+## INNER JOIN 差異 USE MYSQL \ MARIADB
 
 ```SQL
 SELECT 
