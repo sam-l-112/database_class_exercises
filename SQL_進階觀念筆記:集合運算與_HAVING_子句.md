@@ -8,6 +8,8 @@ content = """# 📊 SQL 核心語法與集合運算全攻略 (HackMD 筆記)
 
 本篇筆記針對 DVD 租售管理系統之實體關係圖（ER Diagram：Customer, Transaction, Include, DVD, Publisher）進行延伸探討。內容涵蓋資料庫進階查詢的核心觀念，包含**分組過濾（HAVING）**、**聚合函數（Aggregation Functions）**與**集合運算子（Set Operators）**的詳細功能說明、語法架構及實戰商務範例。
 
+[範例EX](./EX_HAVING.md)
+
 ---
 
 ## 📌 一、 分組過濾器：`HAVING`
