@@ -5,6 +5,8 @@
 
 [SQL 進階觀念筆記：集合運算與 HAVING 子句](./SQL_進階觀念筆記:集合運算與_HAVING_子句.md)
 
+[EX HAVING](./EX_HAVING.md)
+
 本文件整理 Microsoft Access 常見 SQL 語法範例，包含：
 
 - 資料表建立（CREATE TABLE）
