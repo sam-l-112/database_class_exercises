@@ -3,5 +3,31 @@
 - ex
 
 ```sql
-select 
+SELECT 
+    C.CID AS 顧客編號, 
+    C.NAME AS 顧客姓名, 
+    SUM(I.數量 * D.PRICE) AS 五月成交金額
+FROM CUSTOMER C , TRANSACTION T , INCLUDE I
+WHERE C.CID = T.TID
+AND T.TID = I.IID
+AND YEAR(T.DATETIME) = 2026
+AND MONTH(T.DATETIME) = 5
+GROUP BY C.ID , C.NAME
+HAVING SUM(I.數量 * D.PRICE) > 10000
+ORDER BY C.CID;
+```
+
+```SQL
+SELECT 
+    C.CID AS 顧客編號, 
+    C.NAME AS 顧客姓名, 
+    SUM(I.數量 * D.PRICE) AS 五月成交金額
+FROM CUSTOMER C
+INNER JOIN [TRANSACTION] T ON C.CID = T.CID
+INNER JOIN INCLUDE I ON T.TID = I.TID
+INNER JOIN DVD D ON I.DID = D.DID
+WHERE YEAR(T.DATETIME) = 2026 AND MONTH(T.DATETIME) = 5 -- 先過濾出五月份的原始資料
+GROUP BY C.CID, C.NAME                                  -- 依顧客進行分組
+HAVING SUM(I.數量 * D.PRICE) > 10000                     -- 篩選出分組後總金額 > 10,000 的組別
+ORDER BY C.CID;
 ```
